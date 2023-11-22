@@ -161,6 +161,10 @@ class Ui_iPhaser(QMainWindow):
         self.aaa = 0
         self.bbb = 0
         self.index2phase = {0: "idle", 1: "marking", 2: "injection", 3: "dissection"}
+        self.phase_probs = {'Marking': 0,
+                            'Injection': 0,
+                            'Dissection': 0,
+                            'Idle': 1}
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.centralwidget.resizeEvent = self.windowResized
@@ -443,6 +447,7 @@ class Ui_iPhaser(QMainWindow):
                                                        start_y=self.start_y,
                                                        end_y=self.end_y,
                                                        cfg=cfg)
+        self.phase_probs = {'Idle': 1}
         self.processing_thread.processed_frame.connect(self.update_pred)
         self.processing_thread.moveToThread(QCoreApplication.instance().thread())
         self.processing_thread.start()
@@ -524,6 +529,10 @@ class Ui_iPhaser(QMainWindow):
         self.phase2_prob.setValue(pred_percentages[1])
         self.phase3_prob.setValue(pred_percentages[2])
         self.phase4_prob.setValue(pred_percentages[3])
+        self.phase_probs = {'Marking': self.phase1_prob,
+                            'Injection': self.phase2_prob,
+                            'Dissection': self.phase3_prob,
+                            'Idle': self.phase4_prob}
         states = [False] * 4
         states[pred_index] = True
         self.phase1_state.setChecked(states[0])
@@ -990,7 +999,8 @@ class Ui_iPhaser(QMainWindow):
 
         a1 = QLabel("Predicted phase")
         a1.setFont(QFont("Arial", 16, QFont.Bold))
-        a2 = QLabel("Dissection")
+        phase_pred = max(self.phase_probs)
+        a2 = QLabel(phase_pred)
         a2.setFont(QFont("Arial", 26, QFont.Bold))
         a2.setStyleSheet("color: darkblue;")
         VLayout = QtWidgets.QVBoxLayout()
