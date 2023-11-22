@@ -1,0 +1,5 @@
+runs/epoch_149.pth
+runs/fusion_2022-14-18-58-03.pth
+runs/resnet50_2022-14-18-58-03_last.pth
+runs/transformer_2022-14-18-58-03.pth
+model/vit_checkpoint
